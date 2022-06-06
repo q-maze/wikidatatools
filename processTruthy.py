@@ -1,14 +1,14 @@
 import bz2  # for decompressing
-import sys  # for IO
+from pathlib import Path
 import re  # for checking the type of element
 import csv # for output
 import os  # for checking the filesize
 
 # file path for compressed file
-file_path = '/gpfs/gpfs0/project/ds6011-sp22-wiki-data/Data/latest-truthy_2-21-2022.nt.bz2'
+file_path = Path('C://Users/qmays/Downloads/latest-truthy.nt.bz2')
 
 # chunk size in bytes to read in
-CHUNKSIZE = 500  * 1024
+CHUNKSIZE = 50000 * 1024
 # estimated number of chunks in the file
 est_chunks = os.path.getsize(file_path) // CHUNKSIZE
 
@@ -21,10 +21,10 @@ pregex = re.compile("P[0-9]+>$")
 dc = bz2.BZ2Decompressor()
 
 # Open right files
-edges_file = open('/gpfs/gpfs0/project/ds6011-sp22-wiki-data/wikidata_edges_v2.csv', 'w')
-data_file = open('/gpfs/gpfs0/project/ds6011-sp22-wiki-data/wikidata_v2.csv', 'w')
+edges_file = open(Path(r'C:\Users\qmays\PycharmProjects\wikidatatools\test\wikidata_edges_v2.csv'), 'w')
+data_file = open(Path(r'C:\Users\qmays\PycharmProjects\wikidatatools\test\wikidata_v2.csv'), 'w')
 # open a file to output the metadata for each element and write header
-meta_file = open('/gpfs/gpfs0/project/ds6011-sp22-wiki-data/wikidata_meta_v2.csv', 'w')
+meta_file = open(Path(r'C:\Users\qmays\PycharmProjects\wikidatatools\test\wikidata_meta_v2.csv'), 'w')
 # csv writers
 edges_csv = csv.writer(edges_file)
 data_csv = csv.writer(data_file)
@@ -91,9 +91,9 @@ with open(file_path, 'rb') as f:
                         # output = output + ',' + triple_type + '\n'
                 # if the triple type is EPE or EPV write it to the data file
                 print(els)
-                if (triple_type == 'EPE'):
+                if triple_type == 'EPE':
                     edges_csv.writerow(els[:3])
-                elif (triple_type == 'EPV'):
+                elif triple_type == 'EPV':
                     data_csv.writerow(els)
                 # otherwise write it to the metadata file (labels)
                 else:

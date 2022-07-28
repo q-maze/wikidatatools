@@ -149,14 +149,29 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Process .nt.bz2 wikidata file")
     parser.add_argument("-f", dest="filepath", required=True,
                         help="Path to latest-truthy.nt.bz2 file", metavar="FILE")
+    parser.add_argument('-o', dest='output', required=False,
+                        help='Output filepath', metavar='OUT')
+    parser.add_argument('-c', dest='chunksize', required=False,
+                        help='Number of lines to be passed to workers', metavar='CHUNK')
     args = parser.parse_args()
-    ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
-    chunksize = 50000
-    source_file = pathlib.Path(args.filepath)
+
+    if not args.output:
+        output_path = os.path.dirname(os.path.abspath(__file__))
+    else:
+        if not os.path.exists(args.output):
+            os.mkdir(args.output)
+        output_path = args.output
+
+    if not args.chunksize:
+        chunksize = 10000
+    else:
+        chunksize = args.chunksize
+    # replace with args.filepath for slurm jobs
+    # source_file = pathlib.Path("C:/Users/qmays/Downloads/latest-truthy.nt.bz2")
     executors = int(mp.cpu_count() * 0.7)
     l = mp.Lock()
     p = mp.Pool(executors, init, (l,))
-    with tqdm(total=estimate_file_line_count(source_file)) as pbar:
-        for chunk in chunker(chunksize, bz2.open(source_file)):
-            results = p.apply_async(process_chunk, (chunk, chunksize, ROOT_PATH,))
+    with tqdm(total=estimate_file_line_count(args.filepath)) as pbar:
+        for chunk in chunker(chunksize, bz2.open(args.filepath)):
+            results = p.apply_async(process_chunk, (chunk, chunksize, output_path,))
             pbar.update(results.get())

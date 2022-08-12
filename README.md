@@ -21,6 +21,6 @@ run the `create_subset(targets, input_path, output_path)` function specifying a 
 as a string or iterable of strings. 
 
 As this set of tools was created as a pipleine to supply data to a [PyKEEN](https://github.com/pykeen/pykeen) model
-as part of our capstone project at the University of Virginia (paper), we include an example model training script 
+as part of our capstone project at the University of Virginia, we include an example model training script 
 in the examples folder. We also include the datasets from our paper [**Review of Knowledge Graph Embedding Models
 for Link Prediction on Wikidata Subsets**](https://github.com/q-maze/wikidatatools/blob/main/WikidataKGEReview.pdf) as examples.
